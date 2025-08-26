@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.grafana.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:10.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.grafana.service.port }}
+

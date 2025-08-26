@@ -1,0 +1,23 @@
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+
+kubeStateMetrics:
+  enabled: false
+
+nodeExporter:
+  enabled: false
+
+
+#server settings
+grafana:
+  server:
+    image:
+      repository: prom/prometheus
+      tag: v2.48.0
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+    replicaCount: 1
