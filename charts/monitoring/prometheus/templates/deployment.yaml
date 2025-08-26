@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.grafana.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: prometheus
+          image: "{{ .Values.grafana.server.image.repository}}:{{ .Values.grafana.server.image.tag }}"
+          imagePullPolicy: {{ .Values.grafana.server.image.pullPolicy }}
+          ports:
+            - containerPort: 9090
