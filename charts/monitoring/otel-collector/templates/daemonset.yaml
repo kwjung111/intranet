@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "otel-collector.fullname" . }}
+  labels:
+    app: {{ include "otel-collector.name" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "otel-collector.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "otel-collector.name" . }}
+    spec:
+      containers:
+        - name: otel-collector
+          image: "{{ .Values.otel.image.repository }}:{{ .Values.otel.image.tag }}"
+          imagePullPolicy: {{ .Values.otel.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.otel.service.portGrpc }}
+              name: otlp-grpc
+            - containerPort: {{ .Values.otel.service.portHttp }}
+              name: otlp-http
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/otel-collector-config
+              readOnly: true
+          args: 
+            - "--config=/etc/otel-collector-config/otel-collector-config.yaml"
+      volumes:
+        - name: config-volume 
+          configMap:
+            name: {{ include "otel-collector.fullname" . }}-config
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"

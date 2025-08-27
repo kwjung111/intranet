@@ -1,0 +1,15 @@
+otel:
+  replicaCount: 1
+
+  image:
+    repository: otel/opentelemetry-collector-contrib
+    tag: 0.73.0
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    portGrpc: 4317
+    portHttp: 55681
+
+  prometheusRemoteWrite:
+    endpoint: "http://prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
