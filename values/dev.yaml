@@ -11,3 +11,5 @@ grafana:
     type: NodePort
     port: 3000
     nodePort: 32000
+
+otel-collector:
