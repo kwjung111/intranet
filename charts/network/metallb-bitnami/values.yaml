@@ -1,0 +1,13 @@
+configInline:
+  address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+        - 10.28.100.240-10.28.100.250
+speaker:
+  hostnetwork: true
+  interface:
+    - eno1
+    - eno2
+    - eno3
+    - eno4

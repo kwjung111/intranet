@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-vip
+  namespace: network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-vip
+  template:
+    metadata:
+      labels:
+        app: kube-vip
+    spec:
+      serviceAccountName: kube-vip-sa
+      hostNetwork: true
+      containers:
+      - name: kube-vip
+        image: ghcr.io/kube-vip/kube-vip:v1.0.0
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+        args:
+          - manager          # v1.0에서 start → manager
+          - --arp
+          - --services  
+        env:
+          - name: lb_range 
+            value: "10.28.100.240-10.28.100.250"
+          - name: KUBE_VIP_NODE_IFACE
+            value: "true"
+              #- name: vip_interface
+              #value: "eno4"
+          - name: kube_vip_enable_loadbalancer
+            value: "true"      # Service LoadBalancer 지원
+          - name: vip_enable_arp
+            value: "true"
