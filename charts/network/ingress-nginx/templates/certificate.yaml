@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.CertManager.autoSecretName }}
+  namespace: {{ .Values.CertManager.namespace }}
+spec:
+  secretName: {{ .Values.CertManager.autoSecretName }}
+  dnsNames:
+    - "{{ .Values.CertManager.dnsNames }}"
+  issuerRef:
+    name: {{ .Values.CertManager.issuer.name }}
+    kind: ClusterIssuer
