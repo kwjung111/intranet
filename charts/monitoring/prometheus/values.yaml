@@ -12,7 +12,7 @@ nodeExporter:
 
 
 #server settings
-grafana:
+prometheus:
   server:
     image:
       repository: prom/prometheus
@@ -20,4 +20,5 @@ grafana:
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
+      port: 80
     replicaCount: 1

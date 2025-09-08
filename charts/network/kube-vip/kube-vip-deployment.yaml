@@ -4,7 +4,7 @@ metadata:
   name: kube-vip
   namespace: network
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kube-vip
@@ -31,9 +31,9 @@ spec:
             value: "10.28.100.240-10.28.100.250"
           - name: KUBE_VIP_NODE_IFACE
             value: "true"
-              #- name: vip_interface
-              #value: "eno4"
           - name: kube_vip_enable_loadbalancer
             value: "true"      # Service LoadBalancer 지원
           - name: vip_enable_arp
             value: "true"
+          - name: KUBE_VIP_SERVICES
+            value: "ingress-lb:tcp:80,443"

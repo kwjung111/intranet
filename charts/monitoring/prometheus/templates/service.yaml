@@ -4,10 +4,10 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  type: {{ .Values.prometheus.service.type | default "ClusterIP" }}
+  type: {{ .Values.prometheus.server.service.type | default "ClusterIP" }}
   selector:
     app: prometheus
   ports:
     - name: http
-      port: {{ .Values.prometheus.service.port | default 9090 }}
-      targetPort : {{ .Values.prometheus.service.port | default 9090 }}
+      port: {{ .Values.prometheus.server.service.port | default 9090 }}
+      targetPort : {{ .Values.prometheus.server.service.targetPort | default 9090 }}

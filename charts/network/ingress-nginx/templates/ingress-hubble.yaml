@@ -1,14 +1,20 @@
-{{- if .Values.hubbleIngress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hubble-ui
+  name: ingress-kube-system
   namespace: kube-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+      - "hubble.retailninsight.com"
+      secretName: auto-tls
   rules:
-    # - host: hubble.retailninsight.com
-    - http:
+    - host: hubble.retailninsight.com
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -17,4 +23,3 @@ spec:
                 name: {{ .Values.hubbleIngress.serviceName }}
                 port:
                   number: {{ .Values.hubbleIngress.servicePort }}
-{{- end }}

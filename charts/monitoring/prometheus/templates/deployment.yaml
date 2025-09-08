@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.grafana.replicaCount }}
+  replicas: {{ .Values.prometheus.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: "{{ .Values.grafana.server.image.repository}}:{{ .Values.grafana.server.image.tag }}"
-          imagePullPolicy: {{ .Values.grafana.server.image.pullPolicy }}
+          image: "{{ .Values.prometheus.server.image.repository}}:{{ .Values.prometheus.server.image.tag }}"
+          imagePullPolicy: {{ .Values.prometheus.server.image.pullPolicy }}
           ports:
-            - containerPort: 9090
+            - containerPort: {{ .Values.prometheus.server.service.targetPort | default 9090 }}

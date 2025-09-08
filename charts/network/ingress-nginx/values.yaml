@@ -1,0 +1,63 @@
+ingress-nginx:
+  controller:
+    replicaCount: 2
+    service:
+      type: LoadBalancer
+      loadBalancerIP: 10.28.100.240  
+    config:
+      enable-sniffet: "true"
+    admissionWebhooks:
+      enabled: true
+    extraArgs:
+      default-ssl-certificate: "network/auto-tls"
+
+  defaultBackend:
+    enabled: true
+
+cert-manager:
+  extraEnv:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-credentials
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-credentials
+          key: AWS_SECRET_ACCESS_KEY
+
+CertManager:
+  enabled: true
+  namespace: network
+  issuer:
+    name: letsencrypt-prod
+    email: kwjung@businessinsight.co.kr
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solverIngressClass: nginx
+    dnsProvider: route53
+    route53:
+      region: ap-northeast-2
+      hostedZoneID: Z0373232P8FQHL005ZXQ  #AWS
+  autoSecretName: auto-tls
+  certificates:
+    - name: auto-tls
+      namespace: network
+      secretName: auto-tls
+      dnsNames: 
+        - "*.retailninsight.com"
+    - name: auto-tls
+      namespace: kube-system
+      secretName: auto-tls
+      dnsNames: 
+        - "*.retailninsight.com"
+
+hubbleIngress:
+  enabled: true
+  serviceName: hubble-ui
+  servicePort: 80
+
+awsSecret:
+  name: aws-credentials
+  namspace: network
+

@@ -1,12 +1,17 @@
+{{- range .Values.CertManager.certificates }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ .Values.CertManager.autoSecretName }}
-  namespace: {{ .Values.CertManager.namespace }}
+  name: {{ .name }}
+  namespace: {{ .namespace }}
 spec:
-  secretName: {{ .Values.CertManager.autoSecretName }}
-  dnsNames:
-    - "{{ .Values.CertManager.dnsNames }}"
+  secretName: {{ .secretName }}
+  dnsNames: 
+{{- range .dnsNames }}
+    - "{{ . }}"
+{{- end }} 
   issuerRef:
-    name: {{ .Values.CertManager.issuer.name }}
+    name: {{ $.Values.CertManager.issuer.name }}
     kind: ClusterIssuer
+---
+{{- end }}
