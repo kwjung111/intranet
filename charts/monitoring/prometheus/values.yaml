@@ -16,9 +16,13 @@ prometheus:
   server:
     image:
       repository: prom/prometheus
-      tag: v2.48.0
+      tag: v3.5.0
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
       port: 80
     replicaCount: 1
+    extraScrapeConfigs: |
+      - job_name: 'otel-collector'
+        static_configs:
+          - targets: ['otel-deployment.monitoring.svc.cluster.local:9464']

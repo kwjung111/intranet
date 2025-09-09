@@ -18,3 +18,12 @@ spec:
           imagePullPolicy: {{ .Values.prometheus.server.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.prometheus.server.service.targetPort | default 9090 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-config
