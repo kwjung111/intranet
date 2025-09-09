@@ -1,0 +1,8 @@
+hubbleIngress:
+  serviceName: hubble-ui
+  servicePort: 80
+
+grafanaIngress:
+  serviceName: grafana
+  servicePort: 80
+  targetPort: 3000

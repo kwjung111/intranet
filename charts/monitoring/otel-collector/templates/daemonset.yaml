@@ -1,37 +1,45 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "otel-collector.fullname" . }}
-  labels:
-    app: {{ include "otel-collector.name" . }}
+  name: {{ .Values.otel.daemonset.name }}
+  namespace: {{ .Values.otel.daemonset.namespace }}
 spec:
   selector:
     matchLabels:
-      app: {{ include "otel-collector.name" . }}
+      app: otel-daemonset
+      type: daemonset
   template:
     metadata:
       labels:
-        app: {{ include "otel-collector.name" . }}
+        app: otel-daemonset
+        type: daemonset
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: otel-collector
-          image: "{{ .Values.otel.image.repository }}:{{ .Values.otel.image.tag }}"
-          imagePullPolicy: {{ .Values.otel.image.pullPolicy }}
+          image: otel/opentelemetry-collector-contrib:0.73.0
+          imagePullPolicy: {{ .Values.otel.daemonset.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.otel.service.portGrpc }}
+            - containerPort: {{ .Values.otel.daemonset.service.portGrpc }}
               name: otlp-grpc
-            - containerPort: {{ .Values.otel.service.portHttp }}
+            - containerPort: {{ .Values.otel.daemonset.service.portHttp }}
               name: otlp-http
           volumeMounts:
             - name: config-volume
               mountPath: /etc/otel-collector-config
               readOnly: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           args: 
             - "--config=/etc/otel-collector-config/otel-collector-config.yaml"
       volumes:
         - name: config-volume 
           configMap:
-            name: {{ include "otel-collector.fullname" . }}-config
+            name: {{ .Values.otel.daemonset.configMap.name }}
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"

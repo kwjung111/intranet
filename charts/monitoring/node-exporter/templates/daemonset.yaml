@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: {{ .Values.nodeExporter.namespace }}
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      hostNetwork: {{ .Values.nodeExporter.daemonset.hostNetwork }}
+      hostPID: {{ .Values.nodeExporter.daemonset.hostPID }}
+      containers:
+        - name: node-exporter
+          image: "{{ .Values.nodeExporter.image.repository }}:{{ .Values.nodeExporter.image.tag }}"
+          imagePullPolicy: {{ .Values.nodeExporter.image.pullPolicy }}
+          args: {{ .Values.nodeExporter.daemonset.args }}
+          ports:
+            - containerPort: {{ .Values.nodeExporter.service.port }}
+              hostPort: {{ .Values.nodeExporter.service.port }}
+          volumeMounts:
+            - name: root
+              mountPath: /host
+              readOnly: true
+      volumes:
+        - name: root
+          hostPath:
+            path: /

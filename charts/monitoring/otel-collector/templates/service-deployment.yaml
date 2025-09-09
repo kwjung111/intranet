@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.otel.deployment.name }}
+  namespace: {{ .Values.otel.deployment.namespace }}
+spec:
+  type: {{ .Values.otel.deployment.service.type }}
+  selector:
+    app: {{ .Values.otel.deployment.name }}
+    type: {{ .Values.otel.deployment.type }} 
+  ports:
+    - protocol: TCP
+      port: {{ .Values.otel.deployment.service.portGrpc }}
+      targetPort: {{ .Values.otel.deployment.service.portGrpc }}
+      name: otlp-grpc
+    - protocol: TCP
+      port: {{ .Values.otel.deployment.service.portHttp }}
+      targetPort: {{ .Values.otel.deployment.service.portHttp }}
+      name: otlp-http
+    - protocol: TCP
+      port: {{ .Values.otel.deployment.service.portProm }}
+      targetPort: {{ .Values.otel.deployment.service.portProm }}
+      name: prometheus 

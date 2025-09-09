@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+{{- range $key, $value := .Values.grafana.datasources }}
+  {{ $key }}: |-
+{{ $value | indent 4 }}
+{{- end }}

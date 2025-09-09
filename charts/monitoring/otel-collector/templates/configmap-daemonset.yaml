@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.otel.daemonset.configMap.name }} 
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: "node-exporter"
+              static_configs:
+{{- range .Values.otel.nodeExporter.targets }}
+                - targets: [ "{{ . }}" ]
+{{- end }}
+      otlp:
+        protocols:
+          grpc:
+          http:
+    processors:
+      resource:
+        attributes:
+          - key: node_name
+            value: ${NODE_NAME}
+            action: upsert
+
+    exporters:
+      otlp:
+        endpoint: "{{ .Values.otel.deployment.name }}.{{ .Values.otel.deployment.namespace }}.svc.cluster.local:{{ .Values.otel.deployment.service.portGrpc }}"
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        metrics:
+          receivers: [otlp,prometheus]
+          processors: [resource]
+          exporters: [otlp]

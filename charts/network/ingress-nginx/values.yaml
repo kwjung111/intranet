@@ -53,9 +53,13 @@ CertManager:
         - "*.retailninsight.com"
 
 hubbleIngress:
-  enabled: true
   serviceName: hubble-ui
   servicePort: 80
+
+grafanaIngress:
+  serviceName: grafana
+  servicePort: 80
+
 
 awsSecret:
   name: aws-credentials

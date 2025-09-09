@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.otel.deployment.name }}
+  namespace: {{ .Values.otel.deployment.namespace }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.otel.deployment.name }}
+      type: {{ .Values.otel.deployment.type }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.otel.deployment.name }}
+        type: {{ .Values.otel.deployment.type }}
+    spec:
+      containers:
+        - name: {{ .Values.otel.deployment.name }}
+          image: otel/opentelemetry-collector-contrib:0.73.0
+          args:
+            - "--config=/conf/otel-collector-config.yaml"
+          ports:
+            - containerPort: 9464  # Prometheus scrape
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          configMap:
+            name: otel-deployment-config

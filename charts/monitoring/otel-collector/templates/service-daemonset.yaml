@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.otel.daemonset.name }}
+  namespace: {{ .Values.otel.daemonset.namespace }}
+spec:
+  selector:
+    app: {{ .Values.otel.daemonset.name }}
+    type: {{ .Values.otel.daemonset.type }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.otel.daemonset.service.portGrpc }}
+      targetPort: {{ .Values.otel.daemonset.service.portGrpc }}
+      name: otlp-grpc
+    - protocol: TCP
+      port: {{ .Values.otel.daemonset.service.portHttp }}
+      targetPort: {{ .Values.otel.daemonset.service.portHttp }}
+      name: otlp-http
+  type: {{ .Values.otel.daemonset.service.type }} 

@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.grafana.name }}
 spec:
   replicas: {{ .Values.grafana.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Values.grafana.name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Values.grafana.name }}
     spec:
       containers:
         - name: grafana
@@ -18,4 +18,11 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.grafana.service.port }}
-
+          volumeMounts:
+            - name: grafana-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
+      volumes:
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources

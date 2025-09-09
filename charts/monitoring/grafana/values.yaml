@@ -1,18 +1,19 @@
 grafana:
   replicaCount: 1
-
+  name: grafana
   adminUser: admin
   adminPassword: admin
 
   service:
     type: ClusterIP
-    port: 3000
+    port: 80
+    targetPort: 3000
 
   persistence:
     enabled: false
 
   datasources:
-    datasources.yaml:
+    datasources.yaml: |
       apiVersion: 1
       datasources:
         - name: Prometheus

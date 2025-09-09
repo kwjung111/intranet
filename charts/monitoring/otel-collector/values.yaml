@@ -1,15 +1,29 @@
 otel:
   replicaCount: 1
-
-  image:
-    repository: otel/opentelemetry-collector-contrib
-    tag: 0.73.0
+  daemonset:
+    name: otel-daemonset
+    type: daemonset
+    namespace: monitoring
     pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      portGrpc: 4317
+      portHttp: 4318
+    configMap:
+      name: otel-daemonset-config
 
-  service:
-    type: ClusterIP
-    portGrpc: 4317
-    portHttp: 55681
+  deployment:
+    name: otel-deployment
+    type: gateway
+    namespace: monitoring
+    service:
+      type: ClusterIP
+      portGrpc: 4317
+      portHttp: 4318
+      portProm: 9464
+    configMap:
+      name: otel-deployment-config
 
-  prometheusRemoteWrite:
-    endpoint: "http://prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
+  nodeExporter:
+    targets: 
+      - "localhost:9100"

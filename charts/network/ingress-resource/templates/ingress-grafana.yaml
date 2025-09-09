@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-monitoring
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - "monitoring.retailninsight.com"
+      secretName: auto-tls
+  rules:
+    - host: monitoring.retailninsight.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.grafanaIngress.serviceName }}
+                port:
+                  number: {{ .Values.grafanaIngress.servicePort }}
