@@ -6,3 +6,10 @@ grafanaIngress:
   serviceName: grafana
   servicePort: 80
   targetPort: 3000
+
+longhornIngress:
+  serviceName: longhorn-frontend
+  servicePort: 80
+  targetPort: 80
+
+

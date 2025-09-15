@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-longhorn-system
+  namespace: longhorn-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - "longhorn.retailninsight.com"
+      secretName: auto-tls
+  rules:
+    - host: longhorn.retailninsight.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.longhornIngress.serviceName }}
+                port:
+                  number: {{ .Values.longhornIngress.servicePort }}

@@ -18,7 +18,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: otel-collector
-          image: otel/opentelemetry-collector-contrib:0.73.0
+          image: otel/opentelemetry-collector-contrib:0.135.0
           imagePullPolicy: {{ .Values.otel.daemonset.pullPolicy }}
           ports:
             - containerPort: {{ .Values.otel.daemonset.service.portGrpc }}

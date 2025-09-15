@@ -1,0 +1,12 @@
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  scrapeTimeout: 10s
+  additionalLabels: {}
+  namespace: longhorn-system
+
+metrics:
+  serviceMonitor:
+    enbaled: true
+    namespace: monitoring
+    interval: 15s

@@ -1,4 +1,5 @@
-kubeProxyReplacement: true 
+kubeProxyReplacement: true
+masquerade: true
 hubble:
   enabled: true
   ui:
@@ -11,3 +12,5 @@ hostServices:
   enabled: true
 securityContext:
   privileged: true
+k8sServiceHost: 10.28.100.131    # 초기화 시 10.96.0.1 연결 못하는 현상 때문에 실제 IP 입력 필요.
+k8sServicePort: 6443             # VIP 사용시 VIP 넣을것..

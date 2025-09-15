@@ -1,0 +1,16 @@
+server:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: argo.retailninsight.com
+    path: /
+    tls: true
+    extraTls:
+      - hosts:
+          - argo.retailninsight.com
+        secretName: auto-tls
+  insecure: true
+  extraArgs:
+    - --insecure

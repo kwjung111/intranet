@@ -51,6 +51,11 @@ CertManager:
       secretName: auto-tls
       dnsNames: 
         - "*.retailninsight.com"
+    - name: auto-tls
+      namespace: longhorn-system
+      secretName: auto-tls
+      dnsNames:
+        - "*.retailninsight.com"
 
 hubbleIngress:
   serviceName: hubble-ui

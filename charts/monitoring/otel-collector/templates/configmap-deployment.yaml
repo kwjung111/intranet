@@ -8,14 +8,26 @@ data:
       otlp:
         protocols:
           grpc:
+            endpoint: "0.0.0.0:{{ .Values.otel.deployment.service.portGrpc }}"
           http:
+            endpoint: "0.0.0.0:{{ .Values.otel.deployment.service.portHttp }}"
+
+    processors:
+      attributes/overwrite-instance:
+        actions:
+          - key: instance
+            action: upsert
+            from_attribute: node_name
 
     exporters:
       prometheus:
         endpoint: "0.0.0.0:9464"  # Prometheus scrape용 포트
+        resource_to_telemetry_conversion:
+          enabled: true
 
     service:
       pipelines:
         metrics:
           receivers: [otlp]
+          processors: [attributes/overwrite-instance]
           exporters: [prometheus]

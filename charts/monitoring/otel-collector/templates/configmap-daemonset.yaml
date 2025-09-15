@@ -18,8 +18,13 @@ data:
           grpc:
           http:
     processors:
-      resource:
-        attributes:
+      attributes:
+        actions:
+          - key: instance
+            action: upsert
+            value: ${NODE_NAME}
+      attributes/node-name:
+        actions:
           - key: node_name
             value: ${NODE_NAME}
             action: upsert
@@ -29,9 +34,10 @@ data:
         endpoint: "{{ .Values.otel.deployment.name }}.{{ .Values.otel.deployment.namespace }}.svc.cluster.local:{{ .Values.otel.deployment.service.portGrpc }}"
         tls:
           insecure: true
+
     service:
       pipelines:
         metrics:
           receivers: [otlp,prometheus]
-          processors: [resource]
+          processors: [attributes/node-name,attributes]
           exporters: [otlp]

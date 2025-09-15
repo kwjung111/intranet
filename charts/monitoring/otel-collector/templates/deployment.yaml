@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.otel.deployment.name }}
   namespace: {{ .Values.otel.deployment.namespace }}
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: {{ .Values.otel.deployment.name }}
@@ -17,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.otel.deployment.name }}
-          image: otel/opentelemetry-collector-contrib:0.73.0
+          image: otel/opentelemetry-collector-contrib:0.135.0
           args:
             - "--config=/conf/otel-collector-config.yaml"
           ports:

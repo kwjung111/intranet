@@ -13,6 +13,13 @@ spec:
     - host: intranet.retailninsight.com
       http:
         paths:
+          - path: /api/baemin/returns
+            pathType: Prefix
+            backend:
+              service:
+                name: khkim-local
+                port:
+                  number: 80
           - path: /
             pathType: Prefix
             backend:
@@ -20,3 +27,4 @@ spec:
                 name: kwjung-local
                 port:
                   number: 80
+
